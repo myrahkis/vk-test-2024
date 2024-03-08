@@ -1,0 +1,48 @@
+/* #root {
+  --color-lightest: ;
+  --color-darkest: ;
+  --color-main: ;
+  --color-correct: ;
+  --color-wrong: ;
+} */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* font-family: ; */
+  font-size: 65%;
+}
+
+body {
+  min-height: 100vh;
+  padding: 4rem;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.5rem;
+  /* background-color: var();
+  color: var(); */
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 1.5rem;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  /* background-color: ; */
+}
+button:hover {
+  transform: scale(0.9);
+  transition: all 0.2s ease-in-out;
+}
