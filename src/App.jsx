@@ -1,11 +1,11 @@
 import { useState } from "react";
-import "./App.css";
+import styles from "./App.module.css";
 import Fact from "./components/Fact";
 
 function App() {
   return (
     <>
-      <div className="main">
+      <div className={styles.main}>
         <Fact />
       </div>
     </>

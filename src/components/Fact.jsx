@@ -10,22 +10,6 @@ function Fact() {
   const inputEl = useRef(null);
   const btnEl = useRef(null);
 
-  inputEl.current = document.querySelector("#fact-input");
-
-  //   function setFocus() {
-  //     // const btn = btnEl.current;
-  //     // function callback() {
-  //       const firstWordIndex = inputEl.current.value.split(" ")[0].length;
-
-  //       inputEl.current.focus();
-  //       inputEl.current.setSelectionRange(firstWordIndex, firstWordIndex);
-  //     }
-  //     // btnEl.current.addEventListener("click", callback);
-  //     // inputEl.current.addEventListener("focus", callback);
-
-  //     // return () => btn.addEventListener("click", callback);
-  //   }
-
   function handleClick() {
     async function getFact() {
       try {
@@ -40,9 +24,8 @@ function Fact() {
 
         const data = await res.json();
 
-        console.log(data.fact);
+        // console.log(data.fact);
 
-        // console.log(firstWordIndex);
         setFact(() => data.fact);
         setError("");
       } catch (e) {
@@ -54,17 +37,13 @@ function Fact() {
       //   console.log(data.fact);
     }
     getFact();
-    // const firstWordIndex = inputEl.current.value.split(" ")[0].length;
-
-    // if (document.activeElement === inputEl.current) return;
-    // inputEl.current.setSelectionRange(firstWordIndex, firstWordIndex + 10);
   }
 
   useEffect(
     function () {
       const firstWordIndex = fact.split(" ")[0].length;
-      console.log(fact);
-      // const firstWordIndex = fact.split(" ")[0].length;
+      // console.log(fact);
+
       if (fact !== "") {
         inputEl.current.focus();
         inputEl.current.setSelectionRange(firstWordIndex, firstWordIndex);
@@ -73,28 +52,30 @@ function Fact() {
     [fact]
   );
 
-  //   function inputHandle(e) {
-  //     setFact(e.target.value);
-  //   }
+  function inputHandle(e) {
+    setFact(e.target.value);
+  }
 
   return (
-    <div className={styles.factWrapper}>
-      <label>
-        <input
-          id="fact-input"
+    <>
+      <h2>Get a cool cat fact</h2>
+      <div className={styles.factWrapper}>
+        <textarea
           className={styles.factInput}
           type="text"
           value={fact}
-          onChange={""}
+          onChange={inputHandle}
           ref={inputEl}
+          rows="3"
+          cols="60"
         />
-      </label>
-      <button className={styles.factBtn} onClick={handleClick} ref={btnEl}>
-        Get fact
-      </button>
+        <button className={styles.factBtn} onClick={handleClick} ref={btnEl}>
+          Get fact
+        </button>
+      </div>
       {isLoading && <Loader />}
       {error && <Error error={error} />}
-    </div>
+    </>
   );
 }
 

@@ -1,10 +1,13 @@
-/* #root {
-  --color-lightest: ;
-  --color-darkest: ;
-  --color-main: ;
-  --color-correct: ;
-  --color-wrong: ;
-} */
+@import url("https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,700;1,400&display=swap");
+
+:root {
+  --color-lightest: #f7f8ff;
+  --color-darkest: #2e303a;
+  --color-main: #a8aabc;
+  --color-accent: #0077ff;
+  --color-wrong: #e54200;
+  --color-right: #009b58;
+}
 
 * {
   box-sizing: border-box;
@@ -13,33 +16,31 @@
 }
 
 html {
-  /* font-family: ; */
+  font-family: "Arvo", serif;
   font-size: 65%;
 }
 
 body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   min-height: 100vh;
   padding: 4rem;
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
   font-size: 1.5rem;
-  /* background-color: var();
-  color: var(); */
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  background-color: var(--color-darkest);
+  color: var(--color-lightest);
 }
 
 button {
+  font-family: inherit;
   cursor: pointer;
   border-radius: 1.5rem;
   border: none;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 2rem;
   font-weight: 500;
-  font-family: inherit;
   /* background-color: ; */
 }
 button:hover {
