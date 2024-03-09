@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import Loader from "./Loader";
-import Error from "./Error";
+import Loader from "../components/Loader";
+import Error from "../components/Error";
 import styles from "./Fact.module.css";
 
 function Fact() {

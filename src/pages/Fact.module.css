@@ -17,7 +17,7 @@ h2 {
 .factInput {
   font-family: inherit;
   padding: 10px;
-  margin-right: 1.5rem;
+  margin-right: 2.5rem;
   border: 3px solid var(--color-main);
   border-radius: 1.5rem;
   background-color: var(--color-lightest);
