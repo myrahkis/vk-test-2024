@@ -9,7 +9,6 @@ import NavBar from "./components/NavBar";
 function App() {
   return (
     <>
-      <div className={styles.main}>
         <BrowserRouter>
           <NavBar />
           <Routes>
@@ -19,7 +18,6 @@ function App() {
             {/* <Route path='/*' element={<PageNotFound />} /> */}
           </Routes>
         </BrowserRouter>
-      </div>
     </>
   );
 }

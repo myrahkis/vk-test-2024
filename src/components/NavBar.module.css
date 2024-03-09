@@ -1,0 +1,19 @@
+.navBar {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  margin-top: 5rem;
+  margin-bottom: 15rem;
+  gap: 5rem;
+  font-size: 3rem;
+  background-color: var(--color-accent);
+}
+
+.navLink {
+  color: var(--color-lightest);
+  text-decoration: none;
+}
+.active {
+  color: var(--color-accent);
+  -webkit-text-stroke: 1px var(--color-lightest);
+}

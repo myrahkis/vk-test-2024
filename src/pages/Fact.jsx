@@ -30,6 +30,7 @@ function Fact() {
         setError("");
       } catch (e) {
         console.error(e);
+
         setError(e.message);
       } finally {
         setIsLoading(false);

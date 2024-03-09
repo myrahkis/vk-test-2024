@@ -6,11 +6,14 @@
 h2 {
   font-family: "Davida Cyr Regular";
   text-align: center;
-  margin-top: 8rem;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  /* margin-top: 8rem; */
 }
 
 .factWrapper {
   display: flex;
+  justify-content: center;
   padding: 1rem;
 }
 
