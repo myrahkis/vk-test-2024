@@ -9,15 +9,15 @@ import NavBar from "./components/NavBar";
 function App() {
   return (
     <>
-        <BrowserRouter>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cat-fact" element={<Fact />} />
-            <Route path="/get-your-age" element={<NameForm />} />
-            {/* <Route path='/*' element={<PageNotFound />} /> */}
-          </Routes>
-        </BrowserRouter>
+      <BrowserRouter>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cat-fact" element={<Fact />} />
+          <Route path="/get-your-age" element={<NameForm />} />
+          {/* <Route path='/*' element={<PageNotFound />} /> */}
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

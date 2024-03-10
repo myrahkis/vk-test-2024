@@ -2,65 +2,82 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import styles from "./NameForm.module.css";
+import { useQuery } from "react-query";
+import axios from "axios";
+
+async function fetchAge(name) {
+  if (name) {
+    const { data } = await axios.get(`https://api.agify.io/?name=${name}`);
+    return data.age;
+  }
+}
 
 function NameForm() {
   const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [pastNames, setPastNames] = useState([]);
-
-  useEffect(
-    function () {
-      const controller = new AbortController();
-
-      async function fetchAge() {
-        try {
-          setIsLoading(true);
-          setError("");
-
-          const res = await fetch(`https://api.agify.io/?name=${name}`, {
-            signal: controller.signal,
-          });
-
-          if (!res.ok) throw new Error("Что-то не так с загрузкой:(");
-
-          const data = await res.json();
-
-          console.log(data.age);
-
-          setAge(data.age);
-          setError("");
-        } catch (e) {
-          console.error(e.message);
-
-          if (e.name !== "AbortError") setError(e.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (name) fetchAge();
-
-      return () => controller.abort();
-    },
-    [name]
+  // const [age, setAge] = useState(0);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
+  const { data, isLoading, isError } = useQuery(
+    ["age", name],
+    () => fetchAge(name),
+    {
+      // keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    }
   );
 
-//   function test() {
-//     console.log(pastNames.indexOf(val));
-//     if (pastNames.indexOf(val) === -1) {
-//       setName(val);
-//       setPastNames([...pastNames, val]);
-//     } else {
-//       throw new Error("Вы уже вводили это имя!");
-//     }
-//     console.log(pastNames);
-//   }
+  // useEffect(
+  //   function () {
+  //     // const controller = new AbortController();
+  //     const id = setInterval(async function fetchAge() {
+  //       try {
+  //         setIsLoading(true);
+  //         setError("");
+  //         /*           , {
+  //           signal: controller.signal,
+  //         } */
+
+  //         const res = await fetch(`https://api.agify.io/?name=${name}`);
+
+  //         if (!res.ok) throw new Error("Что-то не так с загрузкой:(");
+
+  //         const data = await res.json();
+
+  //         setAge(data.age);
+  //         console.log(data.age);
+
+  //         // for (let i = 0, n = cache.length; i < n; i++) {
+  //         //   if (cache[i].name === name) {
+  //         //     setAge(cache[i].age);
+  //         //   } else {
+
+  //         //   }
+  //         // }
+
+  //         // setName("")
+  //         console.log(cache);
+
+  //         // console.log(pastNames);
+  //         setError("");
+  //         // setName("");
+  //       } catch (e) {
+  //         console.error(e.message);
+
+  //         if (e.name !== "AbortError") setError(e.message);
+  //       } finally {
+  //         setIsLoading(false);
+  //       }
+  //     }, 3000);
+
+  //     setCache(() => [...cache, { name: name, age: data.age }]);
+
+  //     return () => clearInterval(id);
+  //   },
+  //   [name]
+  // );
 
   function inputHandle(e) {
     setName(e.target.value);
-    setAge(0);
   }
 
   function submitHandle(e) {
@@ -79,9 +96,9 @@ function NameForm() {
               onChange={inputHandle}
               className={styles.nameInput}
             />
-            {age !== 0 && (
+            {data && (
               <label className={styles.result}>
-                you&apos;re {age} years old
+                you&apos;re {data} years old
               </label>
             )}
           </div>
@@ -91,7 +108,7 @@ function NameForm() {
         </div>
       </form>
       {isLoading && <Loader />}
-      {error && <Error />}
+      {isError && <Error error={"AAA ошибка"} />}
     </>
   );
 }

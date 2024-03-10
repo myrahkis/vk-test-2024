@@ -2,42 +2,55 @@ import { useState, useRef, useEffect } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import styles from "./Fact.module.css";
+import axios from "axios";
+import { useQuery } from "react-query";
+
+async function fetchFact() {
+  const { data } = await axios.get(`https://catfact.ninja/fact`);
+  return data.fact;
+}
 
 function Fact() {
   const [fact, setFact] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
   const inputEl = useRef(null);
   const btnEl = useRef(null);
+  const { data, refetch, isLoading, isError } = useQuery("fact", fetchFact, {
+    refetchOnWindowFocus: false,
+    // enabled: fact === "" && false,
+  });
 
   function handleClick() {
-    async function getFact() {
-      try {
-        setIsLoading(true);
-        setError("");
+    setFact(data);
+    refetch();
+    // async function getFact() {
+    //   try {
+    //     setIsLoading(true);
+    //     setError("");
 
-        const res = await fetch("https://catfact.ninja/fact");
+    //     const res = await fetch("https://catfact.ninja/fact");
 
-        if (!res.ok) {
-          throw new Error("Что-то пошло не так с загрузкой факта:(");
-        }
+    //     if (!res.ok) {
+    //       throw new Error("Что-то пошло не так с загрузкой факта:(");
+    //     }
 
-        const data = await res.json();
+    //     const data = await res.json();
 
-        // console.log(data.fact);
+    //     // console.log(data.fact);
 
-        setFact(() => data.fact);
-        setError("");
-      } catch (e) {
-        console.error(e);
+    //     setFact(() => data.fact);
+    //     setError("");
+    //   } catch (e) {
+    //     console.error(e);
 
-        setError(e.message);
-      } finally {
-        setIsLoading(false);
-      }
-      //   console.log(data.fact);
-    }
-    getFact();
+    //     setError(e.message);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    //   //   console.log(data.fact);
+    // }
+    // getFact();
   }
 
   useEffect(
@@ -75,7 +88,7 @@ function Fact() {
         </button>
       </div>
       {isLoading && <Loader />}
-      {error && <Error error={error} />}
+      {isError && <Error error={"ОШИБКА"} />}
     </>
   );
 }
