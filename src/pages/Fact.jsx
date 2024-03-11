@@ -18,6 +18,7 @@ function Fact() {
   const btnEl = useRef(null);
   const { data, refetch, isLoading, isError } = useQuery("fact", fetchFact, {
     refetchOnWindowFocus: false,
+    onError: (error) => console.error(error["response"].data),
     // enabled: fact === "" && false,
   });
 
@@ -88,7 +89,7 @@ function Fact() {
         </button>
       </div>
       {isLoading && <Loader />}
-      {isError && <Error error={"ОШИБКА"} />}
+      {isError && <Error error={"АА ОШИБКА"} />}
     </>
   );
 }

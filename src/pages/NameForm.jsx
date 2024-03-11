@@ -4,6 +4,7 @@ import Error from "../components/Error";
 import styles from "./NameForm.module.css";
 import { useQuery } from "react-query";
 import axios from "axios";
+import useDebounce from "../hooks/useDebounce.js";
 
 async function fetchAge(name) {
   if (name) {
@@ -14,15 +15,18 @@ async function fetchAge(name) {
 
 function NameForm() {
   const [name, setName] = useState("");
+  const debouncedName = useDebounce(name, 3000);
   // const [age, setAge] = useState(0);
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState("");
   const { data, isLoading, isError } = useQuery(
-    ["age", name],
-    () => fetchAge(name),
+    ["age", debouncedName],
+    () => fetchAge(debouncedName),
     {
       // keepPreviousData: true,
       refetchOnWindowFocus: false,
+      cacheTime: 10_000,
+      onError: (error) => console.error(error["response"].data),
     }
   );
 
@@ -108,7 +112,7 @@ function NameForm() {
         </div>
       </form>
       {isLoading && <Loader />}
-      {isError && <Error error={"AAA ошибка"} />}
+      {isError && <Error error={"ААА ОШИКЬА"} />}
     </>
   );
 }
