@@ -2,34 +2,66 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import styles from "./NameForm.module.css";
-import { useQuery } from "react-query";
+import { QueryCache, useQuery } from "react-query";
 import axios from "axios";
 import useDebounce from "../hooks/useDebounce.js";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 async function fetchAge(name) {
+  // const getFromCache = function (key) {
+  //   return queryClient.getQueryData([key]);
+  // };
+
+  // const queryCache = new QueryCache({
+  //   onError: (e) => console.log(e),
+  //   onSuccess: (data) => console.log(data),
+  // });
+
   if (name) {
+    // const cache = getFromCache(`age}`);
+
     const { data } = await axios.get(`https://api.agify.io/?name=${name}`);
-    return data.age;
+
+    const age = data.age;
+
+    return age;
   }
 }
+
+const schema = yup
+  .object()
+  .shape({
+    name: yup.string().min(2).max(32).required(),
+  })
+  .strict();
 
 function NameForm() {
   const [name, setName] = useState("");
   const debouncedName = useDebounce(name, 3000);
+  const [formData, setFormData] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   // const [age, setAge] = useState(0);
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState("");
+
   const { data, isLoading, isError } = useQuery(
-    ["age", debouncedName],
-    () => fetchAge(debouncedName),
+    ["age", formData],
+    () => fetchAge(formData),
     {
       // keepPreviousData: true,
       refetchOnWindowFocus: false,
       cacheTime: 10_000,
-      onError: (error) => console.error(error["response"].data),
+      // onError: (error) => console.error(error["response"].data),
     }
   );
-
   // useEffect(
   //   function () {
   //     // const controller = new AbortController();
@@ -84,21 +116,27 @@ function NameForm() {
     setName(e.target.value);
   }
 
-  function submitHandle(e) {
-    e.preventDefault();
+  async function onSubmitHandle(data) {
+    await schema.validate(data, { abortEarly: false });
+    data = schema.cast(data);
+    setFormData(data.name);
+    // console.log(`это имя из формы ${name}`);
+    setName("");
   }
 
   return (
     <>
-      <form onSubmit={submitHandle}>
+      <form onSubmit={handleSubmit(onSubmitHandle)}>
         <h2>Check how old you are by name</h2>
         <div className={styles.wrapper}>
           <div className={styles.inputWrapper}>
             <input
+              {...register("name")}
               type="text"
               value={name}
               onChange={inputHandle}
               className={styles.nameInput}
+              required
             />
             {data && (
               <label className={styles.result}>
@@ -112,7 +150,7 @@ function NameForm() {
         </div>
       </form>
       {isLoading && <Loader />}
-      {isError && <Error error={"ААА ОШИКЬА"} />}
+      {isError && <Error error={errors.name?.message} />}
     </>
   );
 }

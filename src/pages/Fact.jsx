@@ -18,7 +18,7 @@ function Fact() {
   const btnEl = useRef(null);
   const { data, refetch, isLoading, isError } = useQuery("fact", fetchFact, {
     refetchOnWindowFocus: false,
-    onError: (error) => console.error(error["response"].data),
+    // onError: (error) => console.error(error["response"].data),
     // enabled: fact === "" && false,
   });
 

@@ -4,6 +4,7 @@
   align-items: flex-start;
   flex-direction: row;
   gap: 2rem;
+  margin-top: 1.5rem;
 }
 
 .inputWrapper {
@@ -16,8 +17,6 @@
 .nameInput {
   font-size: 2rem;
   width: 100%;
-}
-.result {
 }
 
 .submitBtn {
