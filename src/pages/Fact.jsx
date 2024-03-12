@@ -11,7 +11,7 @@ async function fetchFact() {
 }
 
 function Fact() {
-  const [fact, setFact] = useState("");
+  const [fact, setFact] = useState('');
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState("");
   const inputEl = useRef(null);

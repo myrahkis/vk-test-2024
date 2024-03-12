@@ -5,9 +5,11 @@ import styles from "./NameForm.module.css";
 import { QueryCache, useQuery } from "react-query";
 import axios from "axios";
 import useDebounce from "../hooks/useDebounce.js";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+
+/* @todo: осталось хеширование и прервание устаревших запросов */
 
 async function fetchAge(name) {
   // const getFromCache = function (key) {
@@ -30,21 +32,26 @@ async function fetchAge(name) {
   }
 }
 
-const schema = yup
-  .object()
-  .shape({
-    name: yup.string().min(2).max(32).required(),
-  })
-  .strict();
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .matches(/^[aA-zZ]+$/, "The name must consist of letters only")
+    .min(2)
+    .max(32)
+    .required(),
+});
 
 function NameForm() {
   const [name, setName] = useState("");
   const debouncedName = useDebounce(name, 3000);
   const [formData, setFormData] = useState("");
   const {
-    register,
+    // register,
+    control,
+    trigger,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -53,8 +60,8 @@ function NameForm() {
   // const [error, setError] = useState("");
 
   const { data, isLoading, isError } = useQuery(
-    ["age", formData],
-    () => fetchAge(formData),
+    ["debouncedName", debouncedName],
+    () => fetchAge(debouncedName),
     {
       // keepPreviousData: true,
       refetchOnWindowFocus: false,
@@ -62,6 +69,16 @@ function NameForm() {
       // onError: (error) => console.error(error["response"].data),
     }
   );
+  const {
+    data: dataForm,
+    isLoading: isLoadingForm,
+    isError: isErrorForm,
+  } = useQuery(["formData", formData], () => fetchAge(formData), {
+    // keepPreviousData: true,
+    refetchOnWindowFocus: false,
+    cacheTime: 10_000,
+    // onError: (error) => console.error(error["response"].data),
+  });
   // useEffect(
   //   function () {
   //     // const controller = new AbortController();
@@ -112,17 +129,24 @@ function NameForm() {
   //   [name]
   // );
 
-  function inputHandle(e) {
-    setName(e.target.value);
+  async function inputHandle(value) {
+    const valid = await trigger("name");
+    console.log("valid", valid, "value", value);
+
+    if (!valid) return;
+
+    setName(value);
   }
 
-  async function onSubmitHandle(data) {
-    await schema.validate(data, { abortEarly: false });
-    data = schema.cast(data);
+  function onSubmitHandle(data) {
     setFormData(data.name);
     // console.log(`это имя из формы ${name}`);
     setName("");
+    reset();
   }
+
+  // console.log(formData);
+  // console.log(debouncedName);
 
   return (
     <>
@@ -130,27 +154,41 @@ function NameForm() {
         <h2>Check how old you are by name</h2>
         <div className={styles.wrapper}>
           <div className={styles.inputWrapper}>
-            <input
-              {...register("name")}
-              type="text"
-              value={name}
-              onChange={inputHandle}
-              className={styles.nameInput}
-              required
+            <Controller
+              name="name"
+              defaultValue=""
+              control={control}
+              render={({ field: { value, onChange, ...field } }) => (
+                <input
+                  {...field}
+                  // {...register("name")}
+                  // type="text"
+                  value={value}
+                  onChange={({ target: { value } }) => {
+                    onChange(value);
+                    inputHandle(value);
+                  }}
+                  className={styles.nameInput}
+                  required
+                />
+              )}
             />
-            {data && (
+            {(data || dataForm) && (
               <label className={styles.result}>
-                you&apos;re {data} years old
+                you&apos;re {data || dataForm} years old
               </label>
             )}
+            {/* {errors && <p>{errors.name?.message}</p>} */}
           </div>
           <button type="submit" className={styles.submitBtn}>
             Get age
           </button>
         </div>
       </form>
-      {isLoading && <Loader />}
-      {isError && <Error error={errors.name?.message} />}
+      {(isLoading || isLoadingForm) && <Loader />}
+      {(isError || isErrorForm || errors.name) && (
+        <Error error={errors.name?.message} />
+      )}
     </>
   );
 }
