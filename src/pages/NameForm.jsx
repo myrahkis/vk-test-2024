@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import styles from "./NameForm.module.css";
-import { QueryCache, useQuery } from "react-query";
+import { QueryCache, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import useDebounce from "../hooks/useDebounce.js";
 import { Controller, useForm } from "react-hook-form";
@@ -10,24 +10,28 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 /* @todo: осталось хеширование и прервание устаревших запросов */
+let cache = [];
 
 async function fetchAge(name) {
-  // const getFromCache = function (key) {
-  //   return queryClient.getQueryData([key]);
-  // };
-
-  // const queryCache = new QueryCache({
-  //   onError: (e) => console.log(e),
-  //   onSuccess: (data) => console.log(data),
-  // });
-
   if (name) {
-    // const cache = getFromCache(`age}`);
-
+    for (let i = 0, n = cache.length; i < n; i++) {
+      if (name === cache[i].name) {
+        console.log(true);
+        return cache[i].age;
+      }
+    }
     const { data } = await axios.get(`https://api.agify.io/?name=${name}`);
 
     const age = data.age;
 
+    const newObj = {
+      name: name,
+      age: age,
+    };
+
+    cache.push(newObj);
+
+    console.log(cache);
     return age;
   }
 }
@@ -79,6 +83,7 @@ function NameForm() {
     cacheTime: 10_000,
     // onError: (error) => console.error(error["response"].data),
   });
+
   // useEffect(
   //   function () {
   //     // const controller = new AbortController();
@@ -131,7 +136,7 @@ function NameForm() {
 
   async function inputHandle(value) {
     const valid = await trigger("name");
-    console.log("valid", valid, "value", value);
+    // console.log("valid", valid, "value", value);
 
     if (!valid) return;
 
