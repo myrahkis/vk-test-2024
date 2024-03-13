@@ -9,18 +9,21 @@ import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-/* @todo: осталось хеширование и прервание устаревших запросов */
+/* @todo: осталось прерывание устаревших запросов */
 let cache = [];
 
-async function fetchAge(name) {
+async function fetchAge(signal, name) {
   if (name) {
     for (let i = 0, n = cache.length; i < n; i++) {
       if (name === cache[i].name) {
-        console.log(true);
+        // console.log(true);
         return cache[i].age;
       }
     }
-    const { data } = await axios.get(`https://api.agify.io/?name=${name}`);
+
+    const { data } = await axios.get(`https://api.agify.io/?name=${name}`, {
+      signal,
+    });
 
     const age = data.age;
 
@@ -31,7 +34,7 @@ async function fetchAge(name) {
 
     cache.push(newObj);
 
-    console.log(cache);
+    // console.log(cache);
     return age;
   }
 }
@@ -65,11 +68,11 @@ function NameForm() {
 
   const { data, isLoading, isError } = useQuery(
     ["debouncedName", debouncedName],
-    () => fetchAge(debouncedName),
+    ({ signal }) => fetchAge(signal, debouncedName),
     {
       // keepPreviousData: true,
       refetchOnWindowFocus: false,
-      cacheTime: 10_000,
+      // cacheTime: 10_000,
       // onError: (error) => console.error(error["response"].data),
     }
   );
@@ -77,12 +80,16 @@ function NameForm() {
     data: dataForm,
     isLoading: isLoadingForm,
     isError: isErrorForm,
-  } = useQuery(["formData", formData], () => fetchAge(formData), {
-    // keepPreviousData: true,
-    refetchOnWindowFocus: false,
-    cacheTime: 10_000,
-    // onError: (error) => console.error(error["response"].data),
-  });
+  } = useQuery(
+    ["formData", formData],
+    ({ signal }) => fetchAge(signal, formData),
+    {
+      // keepPreviousData: true,
+      refetchOnWindowFocus: false,
+      // cacheTime: 10_000,
+      // onError: (error) => console.error(error["response"].data),
+    }
+  );
 
   // useEffect(
   //   function () {
@@ -183,7 +190,6 @@ function NameForm() {
                 you&apos;re {data || dataForm} years old
               </label>
             )}
-            {/* {errors && <p>{errors.name?.message}</p>} */}
           </div>
           <button type="submit" className={styles.submitBtn}>
             Get age

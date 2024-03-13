@@ -5,22 +5,26 @@ import styles from "./Fact.module.css";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-async function fetchFact() {
-  const { data } = await axios.get(`https://catfact.ninja/fact`);
+async function fetchFact(signal) {
+  const { data } = await axios.get(`https://catfact.ninja/fact`, { signal });
   return data.fact;
 }
 
 function Fact() {
-  const [fact, setFact] = useState('');
+  const [fact, setFact] = useState("");
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState("");
   const inputEl = useRef(null);
   const btnEl = useRef(null);
-  const { data, refetch, isLoading, isError } = useQuery("fact", fetchFact, {
-    refetchOnWindowFocus: false,
-    // onError: (error) => console.error(error["response"].data),
-    // enabled: fact === "" && false,
-  });
+  const { data, refetch, isLoading, isError } = useQuery(
+    "fact",
+    ({ signal }) => fetchFact(signal),
+    {
+      refetchOnWindowFocus: false,
+      // onError: (error) => console.error(error["response"].data),
+      // enabled: fact === "" && false,
+    }
+  );
 
   function handleClick() {
     setFact(data);
