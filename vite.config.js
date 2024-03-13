@@ -5,4 +5,5 @@ import eslintPlugin from "vite-plugin-eslint";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), eslintPlugin],
+  base: "https://myrahkis.github.io/vk-test-2024/",
 });
