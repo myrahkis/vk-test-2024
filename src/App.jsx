@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter basename="/vk-test-2024">
         <NavBar />
         <Routes>
-          <Route path="/vk-test-2024" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/cat-fact" element={<Fact />} />
           <Route path="/get-your-age" element={<NameForm />} />
           {/* <Route path='/*' element={<PageNotFound />} /> */}
