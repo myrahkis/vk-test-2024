@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: row;
   gap: 2rem;
   margin-top: 1.5rem;
@@ -17,9 +17,20 @@
 .nameInput {
   font-size: 2rem;
   width: 100%;
+  padding: 0.5rem;
+  border-radius: 1.5rem;
+}
+.result {
+  font-size: 2rem;
 }
 
 .submitBtn {
   color: var(--color-lightest);
   background-color: var(--color-accent);
+}
+
+.errorMes {
+  color: var(--color-wrong);
+  font-size: 2rem;
+  margin-top: 1.5rem;
 }

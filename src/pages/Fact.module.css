@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "Davida Cyr Regular";
-  src: url("../fonts/2407-font.ttf") format("truetype");
+  font-family: "Stengazeta";
+  src: url("../fonts/Stengazeta-Regular_5.ttf") format("truetype");
 }
 
 h2 {
-  font-family: "Davida Cyr Regular";
+  font-family: "Stengazeta";
   text-align: center;
-  font-size: 3rem;
+  font-size: 5rem;
   margin-bottom: 1.5rem;
   /* margin-top: 8rem; */
 }
@@ -36,4 +36,10 @@ h2 {
   align-self: center;
   background-color: var(--color-accent);
   color: var(--color-lightest);
+}
+
+.errorMes {
+  color: var(--color-wrong);
+  font-size: 2rem;
+  margin-top: 1.5rem;
 }

@@ -12,56 +12,23 @@ async function fetchFact(signal) {
 
 function Fact() {
   const [fact, setFact] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState("");
   const inputEl = useRef(null);
-  const btnEl = useRef(null);
   const { data, refetch, isLoading, isError } = useQuery(
     "fact",
     ({ signal }) => fetchFact(signal),
     {
       refetchOnWindowFocus: false,
-      // onError: (error) => console.error(error["response"].data),
-      // enabled: fact === "" && false,
     }
   );
 
   function handleClick() {
     setFact(data);
     refetch();
-    // async function getFact() {
-    //   try {
-    //     setIsLoading(true);
-    //     setError("");
-
-    //     const res = await fetch("https://catfact.ninja/fact");
-
-    //     if (!res.ok) {
-    //       throw new Error("Что-то пошло не так с загрузкой факта:(");
-    //     }
-
-    //     const data = await res.json();
-
-    //     // console.log(data.fact);
-
-    //     setFact(() => data.fact);
-    //     setError("");
-    //   } catch (e) {
-    //     console.error(e);
-
-    //     setError(e.message);
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    //   //   console.log(data.fact);
-    // }
-    // getFact();
   }
 
   useEffect(
     function () {
       const firstWordIndex = fact.split(" ")[0].length;
-      // console.log(fact);
 
       if (fact !== "") {
         inputEl.current.focus();
@@ -88,12 +55,12 @@ function Fact() {
           rows="3"
           cols="60"
         />
-        <button className={styles.factBtn} onClick={handleClick} ref={btnEl}>
+        <button className={styles.factBtn} onClick={handleClick}>
           Get fact
         </button>
       </div>
       {isLoading && <Loader />}
-      {isError && <Error error={"АА ОШИБКА"} />}
+      {isError && <p className={styles.errorMes}>Something went wrong!</p>}
     </>
   );
 }
