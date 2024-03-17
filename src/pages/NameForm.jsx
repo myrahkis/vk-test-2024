@@ -1,15 +1,13 @@
 import { useState } from "react";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
 import styles from "./NameForm.module.css";
 import { useQuery } from "react-query";
 import axios from "axios";
-import useDebounce from "../hooks/useDebounce.js";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-let cache = [];
+const cache = [];
 
 async function fetchAge(signal, name) {
   if (name) {
@@ -47,8 +45,7 @@ const schema = yup.object().shape({
 
 function NameForm() {
   const [name, setName] = useState("");
-  const debouncedName = useDebounce(name, 3000);
-  const [formData, setFormData] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
   const {
     control,
     trigger,
@@ -59,22 +56,11 @@ function NameForm() {
     resolver: yupResolver(schema),
   });
 
-  const { data, isLoading, isError } = useQuery(
-    ["debouncedName", debouncedName],
-    ({ signal }) => fetchAge(signal, debouncedName),
+  const { data, isLoading, isError, refetch } = useQuery(
+    ["name", name],
+    ({ signal }) => fetchAge(signal, name),
     {
-      refetchOnWindowFocus: false,
-    }
-  );
-  const {
-    data: dataForm,
-    isLoading: isLoadingForm,
-    isError: isErrorForm,
-  } = useQuery(
-    ["formData", formData],
-    ({ signal }) => fetchAge(signal, formData),
-    {
-      refetchOnWindowFocus: false,
+      enabled: false,
     }
   );
 
@@ -84,12 +70,21 @@ function NameForm() {
     if (!valid) return;
 
     setName(value);
+
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    const id = setTimeout(() => {
+      refetch();
+    }, 3000);
+    setTimeoutId(id);
   }
 
   function onSubmitHandle(data) {
-    setFormData(data.name);
+    setName(data.name);
 
-    setName("");
+    refetch();
     reset();
   }
 
@@ -116,9 +111,9 @@ function NameForm() {
                 />
               )}
             />
-            {(data || dataForm) && (
+            {data && (
               <label className={styles.result}>
-                You&apos;re {data || dataForm} years old!
+                You&apos;re {data} years old!
               </label>
             )}
           </div>
@@ -127,10 +122,8 @@ function NameForm() {
           </button>
         </div>
       </form>
-      {(isLoading || isLoadingForm) && <Loader />}
-      {(isError || isErrorForm) && (
-        <p className={styles.errorMes}>Something went wrong!</p>
-      )}
+      {isLoading && <Loader />}
+      {isError && <p className={styles.errorMes}>Something went wrong!</p>}
       {errors && <p className={styles.errorMes}>{errors.name?.message}</p>}
     </>
   );

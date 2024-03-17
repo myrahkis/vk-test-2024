@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
 import styles from "./Fact.module.css";
 import axios from "axios";
 import { useQuery } from "react-query";
