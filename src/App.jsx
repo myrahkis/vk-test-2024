@@ -4,6 +4,24 @@ import Home from "./pages/Home";
 import NameForm from "./pages/NameForm";
 import NavBar from "./components/NavBar";
 
+// function App() {
+//   return (
+//     <>
+//       <BrowserRouter>
+//         <NavBar />
+//         <Routes>
+//           <Route path="/" element={<Home />} />
+//           <Route path="/cat-fact" element={<Fact />} />
+//           <Route path="/get-your-age" element={<NameForm />} />
+//           <Route path="/*" element={<h1>Page not found!</h1>} />
+//         </Routes>
+//       </BrowserRouter>
+//     </>
+//   );
+// }
+
+/* deploy */
+
 function App() {
   return (
     <>

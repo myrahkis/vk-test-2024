@@ -34,3 +34,27 @@
   font-size: 2rem;
   margin-top: 1.5rem;
 }
+
+/* adaptivness */
+
+/* Extra small: 320-575px */
+@media (max-width: 575px) {
+  .wrapper {
+    gap: 1.5rem;
+  }
+  .inputWrapper {
+    display: inherit;
+    flex-direction: column;
+    gap: 2rem;
+    width: 18rem;
+  }
+  .nameInput {
+    font-size: 1.3rem;
+  }
+  .result {
+    font-size: 1.3rem;
+  }
+  .errorMes {
+    font-size: 1.3rem;
+  }
+}

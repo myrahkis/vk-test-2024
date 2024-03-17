@@ -56,3 +56,19 @@ button:hover {
   font-size: 2rem;
   margin-top: 3rem;
 }
+
+/* adaptivness */
+
+/* Small: 576-767px */
+@media (max-width: 767px) {
+  button {
+    font-size: 1.7rem;
+  }
+}
+
+/* Extra small: 320-575px */
+@media (max-width: 575px) {
+  button {
+    font-size: 1.3rem;
+  }
+}

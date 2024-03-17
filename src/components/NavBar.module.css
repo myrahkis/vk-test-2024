@@ -20,3 +20,21 @@
   color: var(--color-accent);
   font-weight: 700;
 }
+
+/* adaptivness */
+
+/* Large: 992-1199px */
+@media (max-width: 1199px) {
+  .navBar {
+    margin-bottom: 10rem;
+  }
+}
+
+/* Extra small: 320-575px */
+@media (max-width: 575px) {
+  .navBar {
+    margin-bottom: 15rem;
+    gap: 2rem;
+    font-size: 1.8rem;
+  }
+}

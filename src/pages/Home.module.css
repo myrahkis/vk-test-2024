@@ -5,3 +5,26 @@
   gap: 5rem;
   font-size: 3rem;
 }
+
+/* adaptivness */
+
+/* Medium: 768-991px */
+@media (max-width: 991px) {
+  .homeWrapper {
+    font-size: 2.5rem;
+  }
+}
+
+/* Small: 576-767px */
+@media (max-width: 767px) {
+  .homeWrapper {
+    font-size: 2rem;
+  }
+}
+
+/* Extra small: 320-575px */
+@media (max-width: 575px) {
+  .homeWrapper {
+    font-size: 1.5rem;
+  }
+}
